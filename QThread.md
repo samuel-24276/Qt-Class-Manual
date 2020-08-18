@@ -232,3 +232,25 @@ priority *参数的作用取决于操作系统的调度策略。 特别是，在
 - 截止日期已到。 如果到了最后期限，此函数将返回false。
 
 设置为QDeadlineTimer :: Forever（默认值）的截止期限计时器永远不会超时：在这种情况下，该函数仅在线程从run（）返回或线程尚未启动时才返回。
+
+# 5.各类错误
+
+- 1. QTcpSocket对象创建和使用要在同一个线程，否则报错。 
+
+     错误描述：`QObject: Cannot create children for a parent that is in a different thread.`
+
+     QObject：无法为处于不同线程中的父级创建子级。
+
+- 2.disconnectFromHost()和waitForDisconnected()配合使用，没有数据读入则直接断开客户端
+
+  错误描述：`QAbstractSocket::waitForDisconnected() is not allowed in UnconnectedState`
+
+  
+
+  
+
+  
+
+  
+
+  
