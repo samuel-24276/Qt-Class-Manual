@@ -245,12 +245,79 @@ priority *参数的作用取决于操作系统的调度策略。 特别是，在
 
   错误描述：`QAbstractSocket::waitForDisconnected() is not allowed in UnconnectedState`
 
-  
+# 6.Public Functions
 
-  
+```c++
+QThread(QObject *parent = nullptr)
+virtual ~QThread()
+QAbstractEventDispatcher * eventDispatcher() const	//事件调度
+void exit(int returnCode = 0)						//线程退出
+bool isFinished() const								
+bool isInterruptionRequested() const
+bool isRunning() const
+int loopLevel() const
+QThread::Priority priority() const
+void requestInterruption()
+void setEventDispatcher(QAbstractEventDispatcher *eventDispatcher)
+void setPriority(QThread::Priority priority)
+void setStackSize(uint stackSize)
+uint stackSize() const
+bool wait(QDeadlineTimer deadline = QDeadlineTimer(QDeadlineTimer::Forever))
+bool wait(unsigned long time)
 
-  
+```
 
-  
+# 7.Reimplemented Public Functions
 
-  
+```c++
+virtual bool event(QEvent *event) override
+```
+
+# 8.Public Slots
+
+```c++
+void quit()
+void start(QThread::Priority priority = InheritPriority)
+void terminate()
+```
+
+# 9.Signals
+
+```c++
+void finished()
+void started()
+```
+
+# 10.Static Public Members
+
+```c++
+QThread * create(Function &&f, Args &&... args)
+QThread * create(Function &&f)
+QThread * currentThread()
+Qt::HANDLE currentThreadId()
+int idealThreadCount()
+void msleep(unsigned long msecs)
+void sleep(unsigned long secs)
+void usleep(unsigned long usecs)
+void yieldCurrentThread()
+```
+
+# 11.Protected Functions
+
+```c++
+int exec()
+virtual void run()
+```
+
+# 12.Static Protected Members
+
+```c++
+void setTerminationEnabled(bool enabled = true)
+```
+
+
+
+
+
+
+
