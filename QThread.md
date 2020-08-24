@@ -1,5 +1,11 @@
 # QThread
 
+# 0.用法
+
+QThread的run()函数会新开一个进程，而其他函数都是在主进程中的，所以费时操作都要放在run()函数里。在run()里可以调用其他函数，可以是直接调用，也可以是监听信号触发相应函数。
+
+但是真正调用此线程时，只能用start()，不能紧接着使用quit()和wait()函数，线程退出可以通过在run()里添加`connect(mSocket, &QTcpSocket::disconnected, this, &ServerThread::quit, Qt::DirectConnection);`监听来实现。
+
 # 1.Detailed Description
 
 一个QThread对象 管理程序中的一个控制线程。 QThreads开始在run（）中执行。 **默认情况下，run（）通过调用exec（）启动事件循环，并在线程内部运行Qt事件循环。**

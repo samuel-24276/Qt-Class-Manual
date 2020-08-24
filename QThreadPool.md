@@ -100,6 +100,9 @@ QThreadPool通过在`QRunnable :: run（）`中调用tryStart（this）支持多
 
 - bool tryTake(QRunnable *runnable)
 
+  尝试从队列中删除指定的可运行对象（如果尚未启动）。 如果该runnable尚未启动，则返回true，并且runnable的所有权会转移到调用方（即使runnable-> autoDelete（）== true）。 否则返回false。
+  注意：如果runnable-> autoDelete（）== true，则此函数可能会删除错误的runnable。 这被称为ABA问题：原始的可运行对象可能已经执行，并且已被删除。 内存被重新用于另一个可运行对象，然后将其删除，而不是将其删除。 因此，我们建议仅对未自动删除的可运行对象调用此函数。
+
 - bool waitForDone(int msecs = -1)
 
   等待所有毫秒退出（以毫秒为单位），然后从线程池中删除所有线程。 如果删除了所有线程，则返回true；否则，返回true。 否则返回false。 如果毫秒为-1（默认值），则忽略超时（等待最后一个线程退出）。
