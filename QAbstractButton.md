@@ -27,3 +27,17 @@
 - `void setIconSize(const QSize &size)`设置按钮显示的图像大小
 
 - `void toggle()`切换可检查按钮的状态。
+
+# 3.Properties
+
+- `autoExclusive : bool`
+- `autoRepeat : bool`
+- `autoRepeatDelay : int`
+- `autoRepeatInterval : int`
+- `checkable : bool`
+- `checked : bool`
+- `down : bool`
+- `icon : QIcon`
+- `iconSize : QSize`
+- `shortcut : QKeySequence`
+- `text : QString`

@@ -104,6 +104,8 @@ QMutex经过优化，可以在非竞争情况下快速运行。 如果该互斥�
 
 - `bool tryLock(int timeout = 0)`
 
+  互斥量已经被锁定的话，立即返回。
+
   尝试锁定互斥锁。 如果获得了锁，则此函数返回true；否则，返回false。 如果另一个线程锁定了互斥锁，则此功能将最多等待超时毫秒timeout以使该互斥锁可用。
   注意：**由于超时而传递负数等效于调用lock（），即如果超时为负，则此函数将永远等待直到互斥锁可以被锁定为止**。
   如果获得了锁定，则互斥锁必须在另一个线程成功锁定之前使用unlock（）进行解锁。
@@ -132,3 +134,36 @@ QMutex经过优化，可以在非竞争情况下快速运行。 如果该互斥�
 - `void unlock()`
 
   解锁互斥锁。 尝试用与锁定互斥锁不同的线程解锁互斥锁会导致错误。 解锁未锁定的互斥锁会导致未定义的行为。
+
+# QMutexLocker
+
+相比QMutex类，QMutexLocker简化了互斥量的处理，它在构造函数中接受一个QMutex对象作为参数并将其锁定，在析构函数中解锁这个互斥量。这样的方式解决了应在return语句之后进行解锁却无法解锁的问题。
+
+QMutexLocker变量会在函数退出时结束其作用域，从而自动对互斥量mutex解锁。
+
+## Public Functions
+
+- `QMutexLocker(QRecursiveMutex *mutex)`
+
+  构造一个QMutexLocker并锁定互斥锁。 **QMutexLocker销毁后，互斥锁将被解锁**（调用unlock（））。 如果互斥为nullptr，则QMutexLocker不执行任何操作。
+
+- `QMutexLocker(QMutex *mutex)`
+
+  构造一个QMutexLocker并锁定互斥锁。 QMutexLocker销毁后，互斥锁将被解锁。 如果互斥为nullptr，则QMutexLocker不执行任何操作。
+
+- `~QMutexLocker()`
+
+  销毁QMutexLocker并解锁在构造函数中锁定的互斥量。
+
+- ` QMutex *mutex() const`
+
+  返回运行QMutexLocker的互斥量。
+
+- `void   relock()`
+
+  重新锁定未锁定的互斥锁。
+
+- `void  unlock()`
+
+  解锁此互斥锁。 您可以使用relock（）再次锁定它。 销毁时不需要将其锁定。
+

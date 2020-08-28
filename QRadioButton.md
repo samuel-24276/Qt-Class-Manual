@@ -1,6 +1,6 @@
 #  QRadioButton广播按钮
 
-继承自抽象按钮`QAbstractButton`，
+继承关系：`QRadioButton`->`QAbstractButton`->`QWidget`
 
 # 1.Signals
 
@@ -18,3 +18,26 @@
 - `void setChecked(bool)`设置选中槽
 - `void setIconSize(const QSize &size)`设置按钮图标大小
 - `void toggle()`按钮切换
+
+# 3.Public Functions
+
+- `QRadioButton(const QString &text, QWidget *parent = nullptr)`
+- `QRadioButton(QWidget *parent = nullptr)`
+- `virtual ~QRadioButton()`
+
+# 4.Reimplemented Public Functions
+
+- `virtual QSize minimumSizeHint() const override`
+- `virtual QSize sizeHint() const override`
+
+# 5.Protected Functions
+
+- `void initStyleOption(QStyleOptionButton *option) const`
+
+# 6.Reimplemented Protected Functions
+
+- `virtual bool event(QEvent *e) override`
+- `virtual bool hitButton(const QPoint &pos) const override`
+- `virtual void mouseMoveEvent(QMouseEvent *e) override`
+- `virtual void paintEvent(QPaintEvent *) override`
+
