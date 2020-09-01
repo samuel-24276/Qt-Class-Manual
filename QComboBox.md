@@ -1,4 +1,4 @@
-# ComboBox
+# QComboBox
 
 # 0.常见用法
 
@@ -47,63 +47,127 @@ QComboBox使用模型/视图框架为其弹出列表并存储其项目。默认�
 # 4.Public Functions
 
 - `QComboBox(QWidget *parent = nullptr)`
+
 - `void addItem(const QString &text, const QVariant &userData = QVariant())`
+
+  使用给定的文本将一个项目添加到组合框中，并包含指定的userData（存储在Qt :: UserRole中）。 该项目将追加到现有项目列表中。在这里userData 应该使用`QAccessible::CheckBox`，同时包含头文件`#include<QAccessible>`
+
 - `void addItem(const QIcon &icon, const QString &text, const QVariant &userData = QVariant())`
+
+  icon是组合框的项的图标
+
 - `void addItems(const QStringList &texts)`
+
+  texts是添加的一系列项的列表。
+
 - `QCompleter *completer() const`
+
 - `int count() const`
+
 - `QVariant currentData(int role = Qt::UserRole) const`
+
 - `int currentIndex() const`
+
 - `QString currentText() const`
+
 - `bool duplicatesEnabled() const`
+
 - `int findData(const QVariant &data, int role = Qt::UserRole, Qt::MatchFlags flags = static_cast<Qt::MatchFlags>(Qt::MatchExactly|Qt::MatchCaseSensitive)) const`
+
 - `int findText(const QString &text, Qt::MatchFlags flags = Qt::MatchExactly|Qt::MatchCaseSensitive) const`
+
 - `bool hasFrame() const`
+
 - `virtual void hidePopup()`
+
 - `QSize iconSize() const`
+
 - `void insertItem(int index, const QString &text, const QVariant &userData = QVariant())`
+
 - `void insertItem(int index, const QIcon &icon, const QString &text, const QVariant &userData = QVariant())`
+
 - `void insertItems(int index, const QStringList &list)`
+
 - `QComboBox::InsertPolicy insertPolicy() const`
+
 - `void insertSeparator(int index)`
+
 - `bool isEditable() const`
+
 - `QVariant itemData(int index, int role = Qt::UserRole) const`
+
 - `QAbstractItemDelegate *itemDelegate() const`
+
 - `QIcon itemIcon(int index) const`
+
 - `QString itemText(int index) const`
+
 - `QLineEdit *lineEdit() const`
+
 - `int maxCount() const`
+
 - `int maxVisibleItems() const`
+
 - `int minimumContentsLength() const`
+
 - `QAbstractItemModel *model() const`
+
 - `int modelColumn() const`
+
 - `QString placeholderText() const`
+
 - `void removeItem(int index)`
+
 - `QModelIndex rootModelIndex() const`
+
 - `void setCompleter(QCompleter *completer)`
+
 - `void setDuplicatesEnabled(bool enable)`
+
 - `void setEditable(bool editable)`
+
 - `void setFrame(bool)`
+
 - `void setIconSize(const QSize &size)`
+
 - `void setInsertPolicy(QComboBox::InsertPolicy policy)`
+
 - `void setItemData(int index, const QVariant &value, int role = Qt::UserRole)`
+
 - `void setItemDelegate(QAbstractItemDelegate *delegate)`
+
 - `void setItemIcon(int index, const QIcon &icon)`
+
 - `void setItemText(int index, const QString &text)`
+
 - `void setLineEdit(QLineEdit *edit)`
+
 - `void setMaxCount(int max)`
+
 - `void setMaxVisibleItems(int maxItems)`
+
 - `void setMinimumContentsLength(int characters)`
+
 - `void setModel(QAbstractItemModel *model)`
+
 - `void setModelColumn(int visibleColumn)`
+
 - `void setPlaceholderText(const QString &placeholderText)`
+
 - `void setRootModelIndex(const QModelIndex &index)`
+
 - `void setSizeAdjustPolicy(QComboBox::SizeAdjustPolicy policy)`
+
 - `void setValidator(const QValidator *validator)`
+
 - `void setView(QAbstractItemView *itemView)`
+
 - `virtual void showPopup()`
+
 - `QComboBox::SizeAdjustPolicy sizeAdjustPolicy() const`
+
 - `const QValidator *validator() const`
+
 - `QAbstractItemView *view() const`
 
 # 5.Reimplemented Public Functions
