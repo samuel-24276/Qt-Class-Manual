@@ -245,3 +245,68 @@
 
 # 4.Detailed Description
 
+**DOM中的许多函数都返回一个QDomNode。**
+
+找出节点的类型：
+
+- isAttr（）
+- isCDATASection（）
+- isDocumentFragment（）
+- isDocument（）
+- isDocumentType（）
+- isElement（）
+- isEntityReference（）
+- isText（）
+- isEntity（）
+- isNotation（）
+- isProcessingInstruction（）
+- isCharacterData（）
+- isComment（）
+
+将QDomNode转换为其子类之一：
+
+- toAttr（）
+- toCDATASection（）
+- toDocumentFragment（）
+- toDocument（）
+- toDocumentType（）
+- toElement（）
+- toEntityReference（）
+- toText（）
+- toEntity（）
+- toNotation（）
+-  ，toProcessingInstruction（）
+- ，toCharacterData（）
+- toComment（）
+
+将节点转换为空节点：
+
+- clear（）
+
+QDomNode类的副本使用**显式共享**来共享其数据。这意味着**修改一个节点将更改所有副本**。结合返回QDomNode的函数（例如，第一个孩子（）。您可以使用cloneNode（）制作节点的独立（深层）副本。
+QDomNode可以为null，就像nullptr一样。创建空节点的副本将导致另一个空节点。无法修改空节点，但是可以为其分配另一个（可能是非空）节点。在这种情况下，空节点的副本将保持为空。您可以通过调用isNull（）来检查QDomNode是否为null。 QDomNode（或任何派生类）的空构造函数创建一个空节点。
+使用insertBefore（），insertAfter（）或appendChild（）插入节点。您可以使用replaceChild（）将一个节点替换为另一个节点，并使用removeChild（）删除节点。
+要遍历节点，请使用firstChild（）获取节点的第一个子节点（如果有），然后使用nextSibling（）进行遍历。 QDomNode还提供了lastChild（），previousSibling（）和parentNode（）。要查找具有特定节点名称的第一个子节点，请使用namedItem（）。
+要找出节点是否有子节点，请使用hasChildNodes（）并使用childNodes（）来获取节点所有子节点的列表。
+节点的名称和值（其含义因其类型而异）分别由nodeName（）和nodeValue（）返回。节点的类型由nodeType（）返回。可以使用setNodeValue（）设置节点的值。
+节点所属的文档由ownerDocument（）返回。
+可以使用normalize（）将相邻的QDomText节点合并到单个节点中。
+QDomElement节点具有可以使用attribute（）检索的属性。
+QDomElement和QDomAttr节点可以具有可以使用namespaceURI（）检索的名称空间。使用localName（）检索其本地名称，并使用prefix（）检索其前缀。可以使用setPrefix（）设置前缀。
+您可以使用save（）将节点的XML表示形式写入文本流。
+下面的示例在XML文档中查找第一个元素，并打印作为其直接子元素的所有元素的名称。
+
+```c++
+QDomDocument d;
+d.setContent(someXML);
+QDomNode n = d.firstChild();
+while (!n.isNull()) {
+if (n.isElement()) {
+QDomElement e = n.toElement();
+    cout << "Element name: " << e.tagName() << Qt::endl;
+    break;
+}
+	n = n.nextSibling();
+}
+```
+
