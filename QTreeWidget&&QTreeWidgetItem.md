@@ -1,4 +1,4 @@
-# 一，QTreeWidget
+# QTreeWidget
 
 继承关系：`QTreeWidget`->`QTreeView`->`QAbstractItemView`->`QAbstractScrollArea`->`QFrame`->`QWidget`
 
@@ -229,7 +229,50 @@ DGpsItem2->setText(0, "DGps2");
 
  
 
-# 二，QTreeWidgetItem
+# QTreeWidgetItem
+
+- **enum Qt::ItemDataRole**
+
+模型中的每个项目都有一组与之关联的数据元素，每个数据元素都有其自己的角色。 视图使用角色来向模型指示其需要哪种数据类型。 定制模型应返回这些类型的数据。
+通用角色（和关联的类型）是：
+
+| Constant           | Value | Description                                                  |
+| ------------------ | ----- | ------------------------------------------------------------ |
+| Qt::DisplayRole    | 0     | 要以文本形式呈现的关键数据。 （QString）                     |
+| Qt::DecorationRole | 1     | 以图标形式呈现为装饰的数据。 （QColor，QIcon或QPixmap）      |
+| Qt::EditRole       | 2     | 数据格式适合在编辑器中进行编辑。 （QString）                 |
+| Qt::ToolTipRole    | 3     | 数据显示在项目的工具提示中。 （QString）                     |
+| Qt::StatusTipRole  | 4     | 状态栏中显示的数据。 （QString）                             |
+| Qt::WhatsThisRole  | 5     | The data displayed for the item in "What's This?" mode. (QString) |
+| Qt::SizeHintRole   | 13    | 将提供给视图的项目的大小提示。 （QSize）                     |
+
+描述外观和元数据（具有关联类型）的角色：
+
+| Constant                 | Value          | Description                                                  |
+| ------------------------ | -------------- | ------------------------------------------------------------ |
+| Qt::FontRole             | 6              | 用于使用默认委托(delegate)渲染的项目的字体。 （QFont）       |
+| Qt::TextAlignmentRole    | 7              | 使用默认委托(delegate)渲染的项目的文本对齐方式。 （Qt :: Alignment） |
+| Qt::BackgroundRole       | 8              | 用于使用默认委托渲染的项目的背景画笔。 （QBrush）            |
+| Qt::BackgroundColorRole  | BackgroundRole | 该角色已过时。 改用BackgroundRole                            |
+| Qt::ForegroundRole       | 9              | 用于使用默认委托渲染的项目的前景色画笔（通常为文本颜色）。 （QBrush） |
+| Qt::TextColorRole        | ForegroundRole | 该角色已过时。 请改用ForegroundRole。                        |
+| Qt::CheckStateRole       | 10             | 该角色用于获取项目的检查状态。 （Qt :: CheckState）          |
+| Qt::InitialSortOrderRole | 14             | 该角色用于获取标题视图节的初始排序顺序。 （Qt :: SortOrder）。 这个角色是在Qt 4.8中引入的。 |
+
+辅助功能角色（具有关联的类型）：
+
+| Constant                      | Value | Description                                                  |
+| ----------------------------- | ----- | ------------------------------------------------------------ |
+| Qt::AccessibleTextRole        | 11    | 辅助功能扩展和插件（例如屏幕阅读器）使用的文本。 （QString） |
+| Qt::AccessibleDescriptionRole | 12    | 出于可访问性目的而对项目的描述。 （QString）                 |
+
+用户角色：
+
+| Constant     | Value  | Description                              |
+| ------------ | ------ | ---------------------------------------- |
+| Qt::UserRole | 0x0100 | 可以用于特定于应用程序目的的第一个角色。 |
+
+对于用户角色，由开发人员决定使用哪种类型，并确保组件在访问和设置数据时使用正确的类型。
 
 # 1.Public Types
 
@@ -302,7 +345,15 @@ DGpsItem2->setText(0, "DGps2");
 
 - `int columnCount() const`
 
-- `virtual QVariant data(int column, int role) const`
+- **virtual void setData(int column, int role, const QVariant &value)**
+
+  将项目的列和角色的值设置为给定值。
+  该角色描述由值指定的数据类型，并由Qt :: ItemDataRole枚举定义。
+  注意：默认实现将Qt :: EditRole和Qt :: DisplayRole视为引用相同的数据。
+
+- **virtual QVariant data(int column, int role) const**
+
+  返回项目的列和角色的值。返回的值可以再调用value<数据类型>()函数来获取存储的自定义数据。
 
 - `Qt::ItemFlags flags() const`
 
@@ -333,8 +384,6 @@ DGpsItem2->setText(0, "DGps2");
 - `void setCheckState(int column, Qt::CheckState state)`
 
 - `void setChildIndicatorPolicy(QTreeWidgetItem::ChildIndicatorPolicy policy)`
-
-- `virtual void setData(int column, int role, const QVariant &value)`
 
 - `void setDisabled(bool disabled)`
 
@@ -413,257 +462,39 @@ DGpsItem2->setText(0, "DGps2");
 
 - `virtual bool operator<(const QTreeWidgetItem &other) const`
 
-# 三，QAbstractItemModel
+#  3.Protected Functions
 
-继承关系：`QAbstractItemModel`->`QObject`
+- void emitDataChanged()
 
-继承者：
+# 4.Related Non-Members
 
-- QAbstractListModel
--  QAbstractProxyModel 
-- QAbstractTableModel
-- QConcatenateTablesProxyModel
-- QDirModel
-- QFileSystemModel
-- QStandardItemModel
+- QDataStream &operator<<(QDataStream &out, const QTreeWidgetItem &item)
+- QDataStream &operator>>(QDataStream &in, QTreeWidgetItem &item)
 
-# 1.Public Types
+# 5.Detailed Description
 
-- `enum class CheckIndexOption { NoOption, IndexIsValid, DoNotUseParent, ParentIsInvalid }`
-- `flags CheckIndexOptions`
-- `enum LayoutChangeHint { NoLayoutChangeHint, VerticalSortHint, HorizontalSortHint }`
+树小部件项目用于保存树小部件的信息行。行通常包含几列数据，**每列数据可以包含一个文本标签和一个图标**。
+QTreeWidgetItem类是一个便利类，它代替了Qt 3中的QListViewItem类。它提供了一个与QTreeWidget类一起使用的项目。
+通常使用父项构造项目，该父项可以是QTreeWidget（用于顶级项目）或QTreeWidgetItem（用于树中较低级别的项目）。例如，以下代码构造一个顶级项目来表示世界城市，并为奥斯陆添加一个条目作为子项：
 
-# 2.Public Functions
+```c++
+QTreeWidgetItem *cities = new QTreeWidgetItem(treeWidget);
+cities->setText(0, tr("Cities"));
+QTreeWidgetItem *osloItem = new QTreeWidgetItem(cities);
+osloItem->setText(0, tr("Oslo"));
+osloItem->setText(1, tr("Yes"));
+```
 
-- QAbstractItemModel(QObject *parent = nullptr)
+可以通过指定在构建项目时遵循的项目来按特定顺序添加项目：
 
-- virtual ~QAbstractItemModel()
+```c++
+QTreeWidgetItem *planets = new QTreeWidgetItem(treeWidget, cities);
+planets->setText(0, tr("Planets"));
+```
 
-- virtual QModelIndex buddy(const QModelIndex &index) const
+一个项目中的每一列都可以有自己的背景画笔，可以通过setBackground（）函数进行设置。当前的背景画笔可以通过background（）找到。每列的文本标签可以使用其自己的字体和笔刷呈现。这些由setFont（）和setForeground（）函数指定，并由font（）和frontant（）读取。
+顶层项目与树的较低层项目之间的主要区别在于，顶层项目没有parent（）。此信息可用于区分项目之间的区别，并且有助于了解何时从树中插入和删除项目。可以使用takeChild（）删除项目的子项，并使用insertChild（）函数将其插入子项列表中的给定索引。
+默认情况下，项目是启用(enabled)，可选(selectable)，可检查的(checkable)，并且可以作为拖放操作的来源。可以通过使用适当的值调用setFlags（）来更改每个项目的标志。可以使用setCheckState（）函数检查和取消检查可检查项。相应的checkState（）函数指示当前是否检查了该项。
 
-- virtual bool canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int 
-
-  column, const QModelIndex &parent) const
-
-- virtual bool canFetchMore(const QModelIndex &parent) const
-
-- bool checkIndex(const QModelIndex &index, QAbstractItemModel::CheckIndexOptions options = CheckIndexOption::NoOption) const
-
-- virtual int columnCount(const QModelIndex &parent = QModelIndex()) const = 0
-
-- virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const = 0
-
-- virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
-
-- virtual void fetchMore(const QModelIndex &parent)
-
-- virtual Qt::ItemFlags flags(const QModelIndex &index) const
-
-- virtual bool hasChildren(const QModelIndex &parent = QModelIndex()) const
-
-- bool hasIndex(int row, int column, const QModelIndex &parent = QModelIndex()) const
-
-- virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
-
-- virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const = 0
-
-- bool insertColumn(int column, const QModelIndex &parent = QModelIndex())
-
-- virtual bool insertColumns(int column, int count, const QModelIndex &parent = QModelIndex())
-
-- bool insertRow(int row, const QModelIndex &parent = QModelIndex())
-
-- virtual bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex())
-
-- virtual QMap<int, QVariant> itemData(const QModelIndex &index) const
-
-- virtual QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int 
-
-  hits = 1, Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith|Qt::MatchWrap)) const
-
-- virtual QMimeData *mimeData(const QModelIndexList &indexes) const
-
-- virtual QStringList mimeTypes() const
-
-- bool moveColumn(const QModelIndex &sourceParent, int sourceColumn, const QModelIndex &destinationParent, int destinationChild)
-
-- virtual bool moveColumns(const QModelIndex &sourceParent, int sourceColumn, int count, const QModelIndex &destinationParent, int destinationChild)
-
-- bool moveRow(const QModelIndex &sourceParent, int sourceRow, const QModelIndex &destinationParent, int destinationChild)
-
-- virtual bool moveRows(const QModelIndex &sourceParent, int sourceRow, int count, const QModelIndex &destinationParent, int destinationChild)
-
-- virtual QModelIndex parent(const QModelIndex &index) const = 0
-
-- bool removeColumn(int column, const QModelIndex &parent = QModelIndex())
-
-- virtual bool removeColumns(int column, int count, const QModelIndex &parent = QModelIndex())
-
-- bool removeRow(int row, const QModelIndex &parent = QModelIndex())
-
-- virtual bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex())
-
-- virtual QHash<int, QByteArray> roleNames() const
-
-- virtual int rowCount(const QModelIndex &parent = QModelIndex()) const = 0
-
-- virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole)
-
-- virtual bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole)
-
-- virtual bool setItemData(const QModelIndex &index, const QMap<int, QVariant> &roles)
-
-- virtual QModelIndex sibling(int row, int column, const QModelIndex &index) const
-
-- virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder)
-
-- virtual QSize span(const QModelIndex &index) const
-
-- virtual Qt::DropActions supportedDragActions() const
-
-- virtual Qt::DropActions supportedDropActions() const
-
-# 3.Public Slots
-
-- virtual void revert()
-- virtual bool submit()
-
-# 4.Signals
-
-- void columnsAboutToBeInserted(const QModelIndex &parent, int first, int last)
-- void columnsAboutToBeMoved(const QModelIndex &sourceParent, int sourceStart, int sourceEnd, const QModelIndex &destinationParent, int destinationColumn)
-- void columnsAboutToBeRemoved(const QModelIndex &parent, int first, int last)
-- void columnsInserted(const QModelIndex &parent, int first, int last)
-- void columnsMoved(const QModelIndex &parent, int start, int end, const QModelIndex &destination, int column)
-- void columnsRemoved(const QModelIndex &parent, int first, int last)
-- void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles = QVector<int>())
-- void headerDataChanged(Qt::Orientation orientation, int first, int last)
-- void layoutAboutToBeChanged(const QList<QPersistentModelIndex> &parents = 
-- QList<QPersistentModelIndex>(), QAbstractItemModel::LayoutChangeHint hint = QAbstractItemModel::NoLayoutChangeHint)
-- void layoutChanged(const QList<QPersistentModelIndex> &parents = QList<QPersistentModelIndex>(), QAbstractItemModel::LayoutChangeHint hint = QAbstractItemModel::NoLayoutChangeHint)
-- void modelAboutToBeReset()
-- void modelReset()
-- void rowsAboutToBeInserted(const QModelIndex &parent, int start, int end)
-- void rowsAboutToBeMoved(const QModelIndex &sourceParent, int sourceStart, int sourceEnd, const QModelIndex &destinationParent, int destinationRow)
-- void rowsAboutToBeRemoved(const QModelIndex &parent, int first, int last)
-- void rowsInserted(const QModelIndex &parent, int first, int last)
-- void rowsMoved(const QModelIndex &parent, int start, int end, const QModelIndex &destination, int row)
-- void rowsRemoved(const QModelIndex &parent, int first, int last)
-
-# 4.Protected Functions
-
-- void beginInsertColumns(const QModelIndex &parent, int first, int last)
-- void beginInsertRows(const QModelIndex &parent, int first, int last)
-- bool beginMoveColumns(const QModelIndex &sourceParent, int sourceFirst, int sourceLast, const QModelIndex &destinationParent, int destinationChild)
-- bool beginMoveRows(const QModelIndex &sourceParent, int sourceFirst, int sourceLast, const QModelIndex &destinationParent, int destinationChild)
-- void beginRemoveColumns(const QModelIndex &parent, int first, int last)
-- void beginRemoveRows(const QModelIndex &parent, int first, int last)
-- void beginResetModel()
-- void changePersistentIndex(const QModelIndex &from, const QModelIndex &to)
-- void changePersistentIndexList(const QModelIndexList &from, const QModelIndexList &to)
-  QModelIndex createIndex(int row, int column, void *ptr = nullptr) const
-- QModelIndex createIndex(int row, int column, quintptr id) const
-- void endInsertColumns()
-- void endInsertRows()
-- void endMoveColumns()
-- void endMoveRows()
-- void endRemoveColumns()
-- void endRemoveRows()
-- void endResetModel()
-- QModelIndexList persistentIndexList() const
-
-# 5.Protected Slots
-
-- void resetInternalData()
-
-# 6.Detailed Description
-
-
-
-# 四，QModelIndex
-
-# 1.Public Functions
-
-- `QModelIndex()`
-
-  创建一个新的空模型索引。 这种类型的模型索引用于指示模型中的位置无效。
-
-- `int column() const`
-
-  返回此模型索引引用的列。
-
-- `QVariant data(int role = Qt::DisplayRole) const`
-
-  返回索引所引用项目的给定角色的数据。
-
-- `Qt::ItemFlags flags() const`
-
-  返回索引所引用项目的标志。
-
-- `quintptr internalId() const`
-
-  返回模型使用的quintptr，以将索引与内部数据结构相关联。
-
-- `void *internalPointer() const`
-
-  返回模型使用的void *指针，以将索引与内部数据结构相关联。
-
-- `bool isValid() const`
-
-  如果此模型索引有效，则返回true；否则，返回false。
-  有效索引属于模型，并且具有非负的行号和列号。
-
-- `const QAbstractItemModel *model() const`
-
-  返回指向包含该索引所引用项目的模型的指针。
-  返回指向模型的const指针，因为对模型的非const函数的调用可能会使模型索引无效并使应用程序崩溃。
-
-- `QModelIndex parent() const`
-
-  返回模型索引的父级，如果没有父级，则返回QModelIndex（）。
-
-- `int row() const`
-
-  返回此模型索引引用的行。
-
-- `QModelIndex sibling(int row, int column) const`
-
-  **返回行和列的同级。 如果此位置没有兄弟姐妹，则返回无效的QModelIndex。**
-
-- `QModelIndex siblingAtColumn(int column) const`
-
-  返回当前行的列的同级。 如果此位置没有兄弟姐妹，则返回无效的QModelIndex。
-
-- `QModelIndex siblingAtRow(int row) const`
-
-  返回当前列的行的同级。 如果此位置没有兄弟姐妹，则返回无效的QModelIndex。
-
-- `bool operator!=(const QModelIndex &other) const`
-
-  如果此模型索引与另一个模型索引不在同一个位置，则返回true；否则返回false。
-
-- `bool operator<(const QModelIndex &other) const`
-
-  如果此模型索引小于另一个模型索引，则返回true；否则返回false。
-  小于计算对开发人员不是直接有用的-没有定义具有不同父级的索引进行比较的方式。 仅存在此运算符，以便该类可与QMap一起使用。
-
-- `bool operator==(const QModelIndex &other) const`
-
-  如果此模型索引与另一个模型索引位于同一位置，则返回true；否则返回false。
-  与另一个模型索引进行比较时，将使用内部数据指针，行，列和模型值
-
-# 2.Related Non-Members
-
-- `typedef QModelIndexList`
-
-  即QList <QModelIndex>
-
-# 3.Detailed Description
-
-此类用作**QAbstractItemModel**派生的项目模型的索引。**项目视图，委托（delegates）和选择模型使用索引在模型中定位项目**。
-
-模型使用**QAbstractItemModel :: createIndex（）**函数创建新的QModelIndex对象。可以使用QModelIndex构造函数构造无效的模型索引。当引用模型中的顶级项目时，无效索引通常用作父索引。
-模型索引引用模型中的项目，并包含指定它们在这些模型中的位置所需的所有信息。**每个索引位于给定的行和列中，并且可以具有父索引；使用row（），column（）和parent（）获得此信息**。模型中的每个顶级项都由没有父索引的模型索引表示-在这种情况下，parent（）将返回无效的模型索引，该索引等效于使用QModelIndex（）的零参数形式构造的索引。
-若要获取引用模型中现有项目的模型索引，请调用**QAbstractItemModel :: index（）**，其中包含所需的行和列值以及父级的模型索引。**当引用模型中的顶级项目时，请提供QModelIndex（）作为父索引**。
-model（）函数将索引引用的模型作为QAbstractItemModel返回。 child（）函数用于检查模型中索引下的项。 sibling（）函数允许您遍历模型中与索引相同级别的项目。
-注意：应立即使用模型索引，然后将其丢弃。在调用更改模型结构或删除项目的模型函数后，不应依赖索引来保持有效。如果您需要随时间保持模型索引，请使用QPersistentModelIndex。
+- 子类化**Subclassing**
+  当将QTreeWidgetItem子类化以提供自定义项目时，可以为其定义新类型，以便将它们与标准项目区分开。 需要此功能的子类的构造函数需要使用等于或大于UserType的新类型值来调用基类构造函数。
