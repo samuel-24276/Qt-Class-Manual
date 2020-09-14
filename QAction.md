@@ -30,8 +30,11 @@
 # 3.Public Functions
 
 - `QAction(const QIcon &icon, const QString &text, QObject *parent = nullptr)`
+
 - `QAction(const QString &text, QObject *parent = nullptr)`
+
 - `QAction(QObject *parent = nullptr)`
+
 - `virtual ~QAction()`
 
 - `void setCheckable(bool)`
@@ -56,4 +59,38 @@
   状态提示显示在操作的顶级父窗口小部件提供的所有状态栏上。
   默认情况下，此属性包含一个空字符串。
 
-- 
+# 4.Public Slots
+
+- void hover()
+- void setChecked(bool)
+- void setDisabled(bool b)
+- void setEnabled(bool)
+- void setVisible(bool)
+- void toggle()
+- void trigger()
+
+# 5.Signals
+
+- void changed()
+
+  动作更改时将发出此信号。 如果您仅对给定窗口小部件中的动作感兴趣，则可以查看与`QEvent :: ActionChanged`一起发送的`QWidget :: actionEvent（）`。
+
+  注意：属性autoRepeat的通知程序信号。 用于属性检查的通知程序信号。 已启用属性的通知程序信号。 属性字体的通知程序信号。 属性图标的通知程序信号。 属性iconText的通知程序信号。 属性iconVisibleInMenu的通知程序信号。 属性menuRole的通知程序信号。 属性快捷方式的通知程序信号。 属性shortcutContext的通知程序信号。 属性shortcutVisibleInContextMenu的通知程序信号。 属性状态的通知程序信号提示。 属性文本的通知程序信号。 属性工具提示的通知程序信号。 属性的通知程序信号可见。 属性whatsThis的通知程序信号。
+
+- **void hovered()**
+
+  当用户突出显示某个动作时，将发出此信号。 例如，当用户将光标停在菜单选项，工具栏按钮上或按操作的快捷键组合时。
+
+- void toggled(bool checked)
+
+  每当可检查操作更改其isChecked（）状态时，就会发出此信号。 这**可能是用户交互的结果，或者是因为调用了setChecked（）**。 当setChecked（）更改QAction时，除了toggled（）之外，它还会发出change（）。
+
+  如果动作被选中，则checked为true；如果动作未被选中，则为false。
+
+  注意：已检查属性的通知程序信号。
+
+- void triggered(bool checked = false)
+
+  当用户激活某个动作时，将发出此信号。 例如，当用户单击菜单选项，工具栏按钮或按操作的快捷键组合时，或在调用trigger（）时。 值得注意的是，当调用setChecked（）或toggle（）时，不会发出该消息。
+  如果该动作是可检查的，则如果该动作被选中，则true；如果未选中该动作，则false。
+
