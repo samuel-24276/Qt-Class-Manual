@@ -36,13 +36,29 @@
 
   返回当前窗口的所在列数
 
+- **void setColumnCount(int columns)**
+
+  设置表格的总列数，只有设置好列数才会自动生成列名，自己命名列名可以通过setHorizontalHeaderLabels(const QStringList &labels)函数完成，前提是设置好了列数。
+
 - QTableWidgetItem *currentItem() const
 
   返回当前窗口部件
 
+- int row(const QTableWidgetItem *item) const
+
+  返回item所在行数。
+
+- int rowCount() const
+
+  返回表格的总行数
+
 - int currentRow() const
 
   返回当前窗口所在行数
+
+- **void setRowCount(int rows)**
+
+  设置表格的行数,只有设置好行数才会自动生成行名，自己命名行名可以通过setVerticalHeaderLabels(const QStringList &labels)函数完成，前提是设置好了行数。
 
 - void editItem(QTableWidgetItem *item)
 
@@ -60,7 +76,7 @@
 
   返回是否为项目item打开持久性编辑器。
 
-- QTableWidgetItem *item(int row, int column) const
+- **QTableWidgetItem *item(int row, int column) const**
 
   返回给定行和列的项目（如果已设置）； 否则返回nullptr。
 
@@ -68,7 +84,7 @@
 
   返回指向给定点处的项的指针，或者如果表小部件中的项未覆盖该点，则返回nullptr。
 
-- QTableWidgetItem *itemAt(int ax, int ay) const
+- **QTableWidgetItem *itemAt(int ax, int ay) const**
 
   在表小部件的坐标系中返回与QPoint（ax，ay）等效的位置处的项目，或者如果表小部件中的项目未覆盖指定的点，则返回nullptr。
 
@@ -84,14 +100,6 @@
 
   删除在行和列指示的单元格上设置的部件。
 
-- int row(const QTableWidgetItem *item) const
-
-  返回item所在行数。
-
-- int rowCount() const
-
-  返回表格的总行数
-
 - QList<QTableWidgetItem *> selectedItems() const
 
   返回所有选定项目的列表。
@@ -105,10 +113,6 @@
 
   将给定的窗口小部件设置为在给定的行和列的单元格中显示，将窗口小部件的所有权传递给表。
   如果将单元小部件A替换为单元小部件B，则将删除单元小部件A。
-
-- void setColumnCount(int columns)
-
-  设置表格的总列数
 
 - void setCurrentCell(int row, int column)
 
@@ -131,9 +135,9 @@
 
   将列的水平标题项目设置为item。 如有必要，可增加列数以适合该项目。 前一个标题项（如果有的话）被删除。
 
-- void setHorizontalHeaderLabels(const QStringList &labels)
+- **void setHorizontalHeaderLabels(const QStringList &labels)**
 
-  使用标签设置水平标题标签。
+  **使用标签设置水平标题标签。**
 
 - void setItem(int row, int column, QTableWidgetItem *item)
 
@@ -152,17 +156,13 @@
 
   根据选择来选择或取消选择范围。
 
-- void setRowCount(int rows)
-
-  设置表格的行数
-
 - void setVerticalHeaderItem(int row, QTableWidgetItem *item)
 
   将行的垂直标题项目设置为item。
 
-- void setVerticalHeaderLabels(const QStringList &labels)
+- **void setVerticalHeaderLabels(const QStringList &labels)**
 
-  使用标签设置垂直标题标签。
+  **使用标签设置垂直标题标签。**
 
 - void sortItems(int column, Qt::SortOrder order = Qt::AscendingOrder)
 
