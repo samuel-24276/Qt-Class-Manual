@@ -70,27 +70,96 @@
 
 - bool checkIndex(const QModelIndex &index, QAbstractItemModel::CheckIndexOptions options = CheckIndexOption::NoOption) const
 
+  此函数**检查索引是否为此模型的合法模型索引**。合法模型索引要么是无效的模型索引，要么是具有以下所有条件的有效模型索引：
+
+  - 索引的模型是这个；
+  - 索引的行大于或等于零；
+  - 索引的行少于索引的父行的行数；
+  - 索引的列大于或等于零；
+
+  - 索引的列小于索引的父列的列数。
+
+  options参数可能会更改其中一些检查。如果选项包含IndexIsValid，则索引必须是有效索引。当重新实现期望有效索引的数据（例如data（）或setData（））时，这很有用。
+  如果选项包含DoNotUseParent，则将省略调用parent（）的检查；这允许从parent（）重新实现中调用此函数（否则，将导致无限递归和崩溃）。
+  如果选项不包含DoNotUseParent，并且包含ParentIsInvalid，则执行附加检查：检查父索引是否无效。当实现平面模型（例如列表或表）时，这是有用的，在这些模型中，任何模型索引都不应具有有效的父索引。
+  如果所有检查都成功，则此函数返回true，否则返回false。这允许在Q_ASSERT和类似的其他调试机制中使用该函数。如果某些检查失败，则将在qt.core.qabstractitemmodel.checkindex日志记录类别中显示一条警告消息，其中包含一些可能对调试失败有用的信息。
+  注意：**此功能是用于实现自己的项目模型的调试助手**。在开发复杂模型以及构建复杂模型层次结构时（例如使用代理模型），调用此函数很有用，以捕获意外传递给某些QAbstractItemModel API的非法模型索引（如上定义）的错误。
+  警告：请注意，将非法索引传递给项目模型是不确定的行为，因此应用程序必须避免这样做，并且不要依赖项目模型可以用来优雅地处理非法索引的任何“防御性”程序。
+
 - virtual int columnCount(const QModelIndex &parent = QModelIndex()) const = 0
+
+  返回给定父级的子级的列数。
+  在大多数子类中，列数与父代无关。
+
+  **注意**：在实现基于表的模型时，当父级有效时，columnCount（）应该返回0。
+  可以通过元对象系统和QML调用此函数。 请参阅Q_INVOKABLE。
 
 - virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const = 0
 
+  返回以给定角色存储的索引所引用项目的数据。
+  注意：如果没有要返回的值，请返回无效的QVariant而不是返回0。
+  注意：可以通过元对象系统和QML调用此函数。 请参阅Q_INVOKABLE。
+
 - virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
+
+  **处理以给定操作结束的拖放操作提供的数据**。
+  如果数据和操作由模型处理，则返回true；否则返回false。
+  指定的行，列和父项指示操作中模型中项目结束的位置。模型的责任是在正确的位置完成操作。
+  例如，对QTreeView中的某个项目执行drop操作可能导致将新项目作为行，列和父级指定的项目的子级插入，或者作为该项目的同级插入。
+  当行和列为-1时，意味着丢弃的数据应被视为直接在父级上丢弃。通常，这意味着将数据作为父项的子项附加。如果行和列大于或等于零，则表示删除发生在指定父级中指定行和列的紧前面。
+  调用mimeTypes（）成员以获取可接受的MIME类型的列表。此默认实现假定mimeTypes（）的默认实现，该默认返回一个默认的MIME类型。如果在自定义模型中重新实现mimeTypes（）以返回多个MIME类型，则必须重新实现此函数以使用它们。
 
 - virtual void fetchMore(const QModelIndex &parent)
 
+  **使用父级索引指定的父级获取项目的所有可用数据**。
+  如果要增量填充模型，请重新实现。
+  默认实现不执行任何操作。
+  注意：可以通过元对象系统和QML调用此函数。 请参阅Q_INVOKABLE。
+
 - virtual Qt::ItemFlags flags(const QModelIndex &index) const
+
+  **返回给定索引的项目标志**。
+  基类实现返回标志的组合，这些标志启用该项目（ItemIsEnabled）并允许对其进行选择（ItemIsSelectable）。
+  注意：可以通过元对象系统和QML调用此函数。 请参阅Q_INVOKABLE。
 
 - virtual bool hasChildren(const QModelIndex &parent = QModelIndex()) const
 
+  **如果parent有任何孩子，则返回true； 否则返回false**。
+  在父级上使用rowCount（）来找出子级数。
+  请注意，如果同一索引设置了标志Qt :: ItemNeverHasChildren，则使用此方法报告特定索引hasChildren是未定义的行为。
+  注意：可以通过元对象系统和QML调用此函数。 请参阅Q_INVOKABLE。
+
 - bool hasIndex(int row, int column, const QModelIndex &parent = QModelIndex()) const
+
+  **如果模型为带有父项的行和列返回有效的QModelIndex，则返回true；否则返回false**。
+  注意：可以通过元对象系统和QML调用此函数。 请参阅Q_INVOKABLE。
 
 - virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
 
+  **返回标题中具有给定方向的给定角色和节的数据**。
+  对于水平标题，节号对应于列号。 同样，对于垂直标题，段号对应于行号。
+  注意：可以通过元对象系统和QML调用此函数。 参见Q_INVOKABLE
+
 - virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const = 0
+
+  **返回给定行，列和父索引指定的模型中项目的索引**。
+  在子类中重新实现此功能时，请调用createIndex（）以生成模型索引，其他组件可以使用该模型索引来引用模型中的项目。
+  注意：可以通过元对象系统和QML调用此函数。 请参阅Q_INVOKABLE。
 
 - bool insertColumn(int column, const QModelIndex &parent = QModelIndex())
 
+  **在指定的父项的子项中的给定列之前插入一列**。
+  如果插入了该列，则返回true；否则，返回false。 
+
 - virtual bool insertColumns(int column, int count, const QModelIndex &parent = QModelIndex())
+
+  在支持此功能的模型上，在模型中给定列之前插入计数新列。 **每个新列中的项目将是由父模型索引表示的项目的子项目**。
+  如果column为0，则这些列将添加到任何现有列的前面。
+  如果column为columnCount（），则将这些列追加到任何现有列之后。
+  如果父级没有子级，则插入包含计数列的单行。
+  如果成功插入了列，则返回true；否则返回false。 否则返回false。
+  基类实现不执行任何操作，并返回false。
+  如果实现自己的模型，则如果要支持插入，则可以重新实现此功能。 另外，您可以提供自己的API来更改数据。
 
 - bool insertRow(int row, const QModelIndex &parent = QModelIndex())
 
@@ -98,27 +167,62 @@
 
 - virtual QMap<int, QVariant> itemData(const QModelIndex &index) const
 
-- virtual QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int 
+  **返回一个映射，该映射具有给定索引的项目中模型中所有预定义角色的值**。
+  如果要扩展此功能的默认行为以在地图中包含自定义角色，请重新实现此功能。
 
-  hits = 1, Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith|Qt::MatchWrap)) const
+- virtual QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith|Qt::MatchWrap)) const
+
+  **返回起始索引列中各项的索引列表，其中在给定角色下存储的数据与指定值匹配**。执行搜索的方式由给定的标志定义。返回的列表可能为空。还要注意，如果使用例如代理模型，则列表中结果的顺序可能与模型中的顺序不对应。结果的顺序不可靠。
+  搜索从起始索引开始，一直持续到匹配数据项的数目等于命中数，搜索到达最后一行或再次到达搜索为止（取决于是否在标志中指定了MatchWrap）。如果要搜索所有匹配项，请使用hits = -1。
+  默认情况下，此函数将对所有项目执行基于包装的比较，搜索以值指定的搜索词开头的项目。
+  **注意：此功能的默认实现仅搜索列**。重新实现此功能以包括其他搜索行为。
+  注意：可以通过元对象系统和QML调用此函数。参见Q_INVOKABLE
 
 - virtual QMimeData *mimeData(const QModelIndexList &indexes) const
 
+  **返回一个对象，该对象包含与指定索引列表相对应的序列化数据项**。 用于描述编码数据的格式是从mimeTypes（）函数获得的。 此默认实现使用mimeTypes（）的默认实现返回的默认MIME类型。 如果您在自定义模型中重新实现mimeTypes（）以返回更多的MIME类型，请重新实现此函数以使用它们。
+  如果索引列表为空，或者不支持MIME类型，则返回0，而不是序列化的空列表。
+
 - virtual QStringList mimeTypes() const
+
+  **返回允许的MIME类型的列表**。 默认情况下，内置模型和视图使用内部MIME类型：application / x-qabstractitemmodeldatalist。
+  在自定义模型中实现拖放支持时，如果您将以默认的内部MIME类型以外的格式返回数据，请重新实现此函数以返回MIME类型列表。
+  如果在自定义模型中重新实现此函数，则还必须重新实现调用它的成员函数：mimeData（）和dropMimeData（）。
 
 - bool moveColumn(const QModelIndex &sourceParent, int sourceColumn, const QModelIndex &destinationParent, int destinationChild)
 
+  在支持此功能的模型上，将sourceColumn从sourceParent移到destinationParent下的destinationChild。
+  如果成功移动了列，则返回true；否则返回true。 否则返回false。
+
 - virtual bool moveColumns(const QModelIndex &sourceParent, int sourceColumn, int count, const QModelIndex &destinationParent, int destinationChild)
+
+  在支持此功能的模型上，将计数列从父sourceParent下的给定sourceColumn移到父destinationParent下的destinationChild列。
+  如果成功移动了列，则返回true；否则返回true。 否则返回false。
+  基类实现不执行任何操作，并返回false。
+  如果您实现自己的模型，则要支持移动，可以重新实现此功能。 另外，您可以提供自己的API来更改数据。
 
 - bool moveRow(const QModelIndex &sourceParent, int sourceRow, const QModelIndex &destinationParent, int destinationChild)
 
 - virtual bool moveRows(const QModelIndex &sourceParent, int sourceRow, int count, const QModelIndex &destinationParent, int destinationChild)
 
-- virtual QModelIndex parent(const QModelIndex &index) const = 0
+- **virtual QModelIndex parent(const QModelIndex &index) const = 0**
+
+  返回具有给定索引的模型项的父项。 如果该项没有父项，则返回无效的QModelIndex。
+  在公开树数据结构的模型中使用的常见约定是，只有第一列中的项目才有子级。 对于这种情况，当在子类中重新实现此函数时，返回的QModelIndex的列将为0。
+  在子类中重新实现此函数时，请小心避免调用QModelIndex成员函数，例如QModelIndex :: parent（），因为属于您模型的索引将仅调用您的实现，从而导致无限递归。
+  注意：可以通过元对象系统和QML调用此函数。 请参阅Q_INVOKABLE。
 
 - bool removeColumn(int column, const QModelIndex &parent = QModelIndex())
 
+  **从指定的父项的子项中删除给定的列**。
+  如果删除了该列，则返回true；否则返回false。 否则返回false。
+
 - virtual bool removeColumns(int column, int count, const QModelIndex &parent = QModelIndex())
+
+  **在支持此功能的模型上，从模型中删除以父父下的给定列开始的计数列**。
+  如果成功删除了列，则返回true；否则返回true。 否则返回false。
+  基类实现不执行任何操作，并返回false。
+  如果您实现自己的模型，则要支持删除，可以重新实现此功能。 另外，您可以提供自己的API来更改数据。
 
 - bool removeRow(int row, const QModelIndex &parent = QModelIndex())
 
@@ -126,23 +230,69 @@
 
 - virtual QHash<int, QByteArray> roleNames() const
 
+  返回模型的角色名称。
+  Qt设置的默认角色名称为：
+
+  | Qt Role            | QML Role Name |
+  | ------------------ | ------------- |
+  | Qt::DisplayRole    | display       |
+  | Qt::DecorationRole | decoration    |
+  | Qt::EditRole       | edit          |
+  | Qt::ToolTipRole    | toolTip       |
+  | Qt::StatusTipRole  | statusTip     |
+  | Qt::WhatsThisRole  | whatsThis     |
+
+  
+
 - virtual int rowCount(const QModelIndex &parent = QModelIndex()) const = 0
 
 - virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole)
 
+  **将index处的项目的角色数据设置为value**。
+  如果成功，则返回true； 否则返回false。
+  如果成功设置了数据，则应发出dataChanged（）信号。
+  基类实现返回false。 对于可编辑模型，必须重新实现此函数和data（）。
+  注意：可以通过元对象系统和QML调用此函数。 请参阅Q_INVOKABLE。
+
 - virtual bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole)
+
+  **将标题中给定角色和节中具有指定方向的数据设置为所提供的值**。
+  如果标题的数据已更新，则返回true； 否则返回false。
+  重新实现此功能时，必须显式发出headerDataChanged（）信号。
 
 - virtual bool setItemData(const QModelIndex &index, const QMap<int, QVariant> &roles)
 
-- virtual QModelIndex sibling(int row, int column, const QModelIndex &index) const
+  **对于每个Qt :: ItemDataRole，将索引处的项目的角色数据设置为角色中的关联值**。
+  如果成功，则返回true； 否则返回false。
+  不在角色中的角色将不会被修改。
+
+- **virtual QModelIndex sibling(int row, int column, const QModelIndex &index) const**
+
+  **返回索引处项目的行和列的同级；如果该位置没有同级，则返回无效的QModelIndex**。
+  sibling（）只是一个便捷函数，它找到项目的父项，并使用它来检索指定行和列中子项的索引。
+  可以选择重写此方法，以实现特定于实现的优化。
+  注意：可以通过元对象系统和QML调用此函数。 参见Q_INVOKABLE
 
 - virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder)
 
+  按给定顺序按列对模型进行排序。
+  基类实现不执行任何操作。
+
 - virtual QSize span(const QModelIndex &index) const
+
+  返回由索引表示的项目的行和列跨度。
+  注意：当前未使用跨度。
 
 - virtual Qt::DropActions supportedDragActions() const
 
+  返回此模型中数据支持的操作。
+  默认实现返回supportedDropActions（）。 如果您希望支持其他操作，请重新实现此功能。
+  发生拖动时，QAbstractItemView :: startDrag（）将supportDragActions（）用作默认值。
+
 - virtual Qt::DropActions supportedDropActions() const
+
+  返回此模型支持的放置动作。
+  默认实现返回Qt :: CopyAction。 如果您希望支持其他操作，请重新实现此功能。 您还必须重新实现dropMimeData（）函数以处理其他操作。
 
 # 3.Public Slots
 
@@ -290,6 +440,44 @@
 # 6.Protected Slots
 
 - void resetInternalData()
+
+  **在重置模型的内部数据后，将立即调用此插槽**。
+  该插槽为具体代理模型的子类提供了便利，例如维护额外数据的QSortFilterProxyModel的子类。
+
+  ```c++
+  class CustomDataProxy : public QSortFilterProxyModel
+   {
+       Q_OBJECT
+   public:
+       CustomDataProxy(QObject *parent)
+         : QSortFilterProxyModel(parent)
+       {
+       }
+  
+       ...
+  
+       QVariant data(const QModelIndex &index, int role) override
+       {
+           if (role != Qt::BackgroundRole)
+               return QSortFilterProxyModel::data(index, role);
+  
+           if (m_customData.contains(index.row()))
+               return m_customData.value(index.row());
+           return QSortFilterProxyModel::data(index, role);
+       }
+  
+   private slots:
+       void resetInternalData()
+       {
+           m_customData.clear();
+       }
+  
+   private:
+     QHash<int, QVariant> m_customData;
+   };
+  ```
+
+  注意：由于错误，在Qt 5.0中缺少此插槽。
 
 # 7.Detailed Description
 
