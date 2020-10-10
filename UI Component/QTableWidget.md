@@ -28,7 +28,7 @@
 
   返回窗口部件所在列数
 
-- int columnCount() const
+- **int columnCount() const**
 
   返回表格总列数
 
@@ -48,7 +48,7 @@
 
   返回item所在行数。
 
-- int rowCount() const
+- **int rowCount() const**
 
   返回表格的总行数
 
@@ -84,7 +84,7 @@
 
   返回指向给定点处的项的指针，或者如果表小部件中的项未覆盖该点，则返回nullptr。
 
-- **QTableWidgetItem *itemAt(int ax, int ay) const**
+- QTableWidgetItem *itemAt(int ax, int ay) const
 
   在表小部件的坐标系中返回与QPoint（ax，ay）等效的位置处的项目，或者如果表小部件中的项目未覆盖指定的点，则返回nullptr。
 
@@ -232,7 +232,7 @@
 
   当行和列指定的单元格已激活时，将发出此信号
 
-- void cellChanged(int row, int column)
+- **void cellChanged(int row, int column)**
 
   只要行和列指定的单元格中的项目数据发生更改，就会发出此信号。
 
@@ -265,7 +265,7 @@
 
   当指定的项目被激活时，该信号被发射
 
-- void itemChanged(QTableWidgetItem *item)
+- **void itemChanged(QTableWidgetItem *item)**
 
   每当项目数据更改时，都会发出此信号。
 
