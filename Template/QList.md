@@ -7,6 +7,8 @@
 - QQueue
 - QStringList
 
+QLinkedList是它的变种——链表，但已过时，尽量不使用。
+
 ## 1.Public Types
 
 - class const_iterator
