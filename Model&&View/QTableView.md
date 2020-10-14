@@ -57,9 +57,21 @@
 
   返回给定列的宽度。
 
-- Qt::PenStyle gridStyle() const
+- **Qt::PenStyle gridStyle() const**
 
   此属性保存用于绘制网格的笔样式。
+
+  | Constant           | Value | Description                                                  |
+  | ------------------ | ----- | ------------------------------------------------------------ |
+  | Qt::NoPen          | 0     | 完全没有线。 例如，QPainter :: drawRect（）填充但不绘制任何边界线。 |
+  | Qt::SolidLine      | 1     | 一条简单的线。                                               |
+  | Qt::DashLine       | 2     | 虚线隔开几个像素。                                           |
+  | Qt::DotLine        | 3     | 点分开几个像素。                                             |
+  | Qt::DashDotLine    | 4     | 交替的点和破折号。                                           |
+  | Qt::DashDotDotLine | 5     | 一个破折号，两个点，一个破折号，两个点。                     |
+  | Qt::CustomDashLine | 6     | 使用QPainterPathStroker :: setDashPattern（）定义的自定义模式 |
+
+  
 
 - QHeaderView *horizontalHeader() const
 
@@ -136,29 +148,66 @@
 
 - bool showGrid() const
 
+  此属性保存是否显示网格
+  如果此属性为true，则为表格绘制一个网格； 如果该属性为false，则不绘制网格。 默认值是true。
+
 - bool wordWrap() const
+
+  此属性包含项文本换词策略
+  如果此属性为true，则在断字时将项目文本包装在必要的位置； 否则，它根本不会被包裹。 默认情况下，此属性为true。
+  请注意，即使启用了自动换行，该单元也不会扩展为适合所有文本。 省略号将根据当前的textElideMode插入。
 
 ## 3.Reimplemented Public Functions
 
 - virtual QModelIndex indexAt(const QPoint &pos) const override
+
+  返回与表项相对应的模型项在内容坐标中位置pos的索引位置。
+
 - virtual void setModel(QAbstractItemModel *model) override
+
 - virtual void setRootIndex(const QModelIndex &index) override
+
 - virtual void setSelectionModel(QItemSelectionModel *selectionModel) override
 
 ## 4.Public Slots
 
 - void hideColumn(int column)
+
+  隐藏给定的列。
+
 - void hideRow(int row)
+
 - void resizeColumnToContents(int column)
+
+  根据用于呈现列中每个项目的委托的大小提示来调整给定列的大小。
+  注意：仅可见列将被调整大小。 重新实现sizeHintForColumn（）也可以调整隐藏列的大小。
+
 - void resizeColumnsToContents()
+
+  根据用于呈现列中每个项目的委托的大小提示来调整所有列的大小。
+
 - void resizeRowToContents(int row)
+
 - void resizeRowsToContents()
+
 - void selectColumn(int column)
+
+  如果当前的**SelectionMode**和**SelectionBehavior**（可在QAbstractItemView找到）允许选择列，则在表视图中选择给定的列。
+
 - void selectRow(int row)
+
 - void setShowGrid(bool show)
+
 - void showColumn(int column)
+
+  展示给定列。
+
 - void showRow(int row)
+
 - void sortByColumn(int column, Qt::SortOrder order)
+
+  按给定列和顺序中的值对模型进行排序。
+  列可能为-1，在这种情况下，将不会显示排序指示符，并且模型将返回其自然的未排序顺序。 请注意，并非所有型号都支持此功能，在这种情况下甚至可能崩溃。
 
 ## 5.Reimplemented Protected Functions
 
