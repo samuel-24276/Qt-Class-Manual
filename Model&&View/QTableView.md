@@ -2,6 +2,8 @@
 
 继承关系：`QTableView`->`QAbstractItemView`->`QAbstractScrollArea`->`QFrame`->`QWidget`
 
+> 设置垂直/水平标题可以通过设置其关联的QStandardItemModel的水平/垂直标题完成。
+
 ## 1.Properties
 
 - cornerButtonEnabled : bool
@@ -163,7 +165,7 @@
 
   返回与表项相对应的模型项在内容坐标中位置pos的索引位置。
 
-- virtual void setModel(QAbstractItemModel *model) override
+- **virtual void setModel(QAbstractItemModel *model) override**
 
 - virtual void setRootIndex(const QModelIndex &index) override
 

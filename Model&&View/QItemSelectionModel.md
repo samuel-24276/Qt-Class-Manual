@@ -2,6 +2,8 @@
 
 继承关系：`QItemSelectionModel`->`QObject`
 
+一个用于跟踪视图组件的单元格选择状态的类，当在QTableView选择某个单元格，或多个单元格时，通过QItemSelectionModel可以获得选中的单元格的模型索引，为单元格的选择操作提供方便。
+
 ## 1.Public Types
 
 - enum SelectionFlag { NoUpdate, Clear, Select, Deselect, Toggle, …, ClearAndSelect }
