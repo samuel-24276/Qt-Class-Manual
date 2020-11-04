@@ -80,8 +80,6 @@
 
   此功能将忽略注释。 它仅评估QDomText和QDomCDATASection对象。
 
-
-
 - QString attributeNS(const QString nsURI, const QString &localName, const QString &defValue = QString()) const
 
   返回具有本地名称localName和名称空间URI nsURI的属性。 如果该属性不存在，则返回defValue。

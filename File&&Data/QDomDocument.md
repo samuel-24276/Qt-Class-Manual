@@ -2,7 +2,13 @@
 
 继承关系：`QDomDocument`->`QDomNode`
 
-# 1.Public Functions
+Qt 4具有三个不同的XML解析器：
+
+- QDomDocument——DOM解析器,QtXML的一部分
+- QXmlSimpleReader——推送(事件)解析器,是QtXML的一部分
+- QXmlStreamReader——Pull解析器,是QtCore的一部分,现在是推荐的解析器
+
+## 1.Public Functions
 
 - QDomDocument(const QDomDocument &x)
 
@@ -16,7 +22,7 @@
 
 - ~QDomDocument()
 
-- `QDomAttr createAttribute(const QString &name)`
+- **`QDomAttr createAttribute(const QString &name)`**
 
   创建一个名为name的新属性，该属性可以插入到元素中，例如 使用QDomElement :: setAttributeNode（）。
   如果name不是有效的XML名称，则此函数的行为由QDomImplementation :: InvalidDataPolicy控制。
@@ -40,7 +46,7 @@
 
   创建一个新的文档片段，该片段可用于保存文档的某些部分，例如 在对文档树进行复杂操作时。
 
-- QDomElement createElement(const QString &tagName)
+- **`QDomElement createElement(const QString &tagName)`**
 
   创建一个名为tagName的新元素，该元素可以插入DOM树中，例如 使用QDomNode :: appendChild（）。
   如果tagName不是有效的XML名称，则此函数的行为由QDomImplementation :: InvalidDataPolicy控制。
@@ -55,14 +61,12 @@
   创建一个名为name的新实体引用，该实体引用可以插入文档中，例如 使用QDomNode :: appendChild（）。
   如果name不是有效的XML名称，则此函数的行为由QDomImplementation :: InvalidDataPolicy控制。
 
-- QDomProcessingInstruction createProcessingInstruction(const QString &target, const 
-
-  QString &data)
+- **`QDomProcessingInstruction createProcessingInstruction(const QString &target, const QString &data)`**
 
   创建可以插入文档的新处理指令，例如 使用QDomNode :: appendChild（）。 该功能将处理指令的目标设置为目标，将数据设置为数据。
-  如果target不是有效的XML名称，或者data如果包含的字符不能出现在处理指令中，则此函数的行为由QDomImplementation :: InvalidDataPolicy控制。
-
-- QDomText createTextNode(const QString &value)
+如果target不是有效的XML名称，或者data如果包含的字符不能出现在处理指令中，则此函数的行为由QDomImplementation :: InvalidDataPolicy控制。
+  
+- **`QDomText createTextNode(const QString &value)`**
 
   为可插入文档树的字符串值创建一个文本节点，例如 使用QDomNode :: appendChild（）。
   如果value包含无法存储为XML文档的字符数据的字符（即使是以字符引用的形式），则此函数的行为由QDomImplementation :: InvalidDataPolicy支配。
@@ -71,7 +75,7 @@
 
   返回此文档的文档类型。
 
-- QDomElement documentElement() const
+- **QDomElement documentElement() const**
 
   返回文档的根元素。
 
@@ -173,5 +177,5 @@
   此函数使用缩进作为缩进子元素的空间量。
   如果indent为-1，则根本不添加空格。
 
-# 2.Detailed Description
+## 2.Detailed Description
 

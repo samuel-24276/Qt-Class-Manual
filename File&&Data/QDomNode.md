@@ -1,5 +1,18 @@
 # QDomNode
 
+继承者：
+
+- QDomAttr
+- QDomCharacterData
+- QDomDocument
+- QDomDocumentFragment
+- QDomDocumentType
+- QDomElement
+- QDomEntity
+- QDomEntityReference 
+- QDomNotation
+- QDomProcessingInstruction
+
 # 1.Public Types
 
 - `enum EncodingPolicy { EncodingFromDocument, EncodingFromTextStream }`
@@ -13,7 +26,13 @@
 
 - `~QDomNode()`
 
-- `QDomNode appendChild(const QDomNode &newChild)`
+- **`QDomNode namedItem(const QString &name) const`**
+
+  返回其nodeName（）等于name的第一个直接子节点**的父节点**（原文档没有的父节点，测试后返回的是父节点）。
+
+  如果不存在这样的直接子代，则返回空节点。
+
+- **`QDomNode appendChild(const QDomNode &newChild)`**
 
   将newChild追加为节点的最后一个子节点。
   如果newChild是另一个节点的子节点，则将其重新关联到该节点。 如果newChild是此节点的子级，则将更改其在子级列表中的位置。
@@ -23,14 +42,65 @@
   在空节点（例如，使用默认构造函数创建）上调用此函数不会执行任何操作，并返回空节点。
   DOM规范不允许插入属性节点，但是由于历史原因，QDom仍然接受它们。
 
+- **`QString nodeName() const`**
+
+  返回节点的名称。
+
+  名称的含义取决于子类：
+
+  | Name                      | Meaning                         |
+  | ------------------------- | ------------------------------- |
+  | QDomAttr                  | 属性的名字                      |
+  | QDomCDATASection          | The string "#cdata-section"     |
+  | QDomComment               | The string "#comment"           |
+  | QDomDocument              | The string "#document"          |
+  | QDomDocumentFragment      | The string "#document-fragment" |
+  | QDomDocumentType          | 文件类型的名称                  |
+  | QDomElement               | 标签名称                        |
+  | QDomEntity                | 实体名称                        |
+  | QDomEntityReference       | 实体引用的名称                  |
+  | QDomNotation              | 注释的名称                      |
+  | QDomProcessingInstruction | 处理指令的对象                  |
+  | QDomText                  | The string "#text"              |
+
+  **注意**：处理元素和属性节点的名称时，**此函数不考虑名称空间的存在**。 结果，返回的名称可以包含可能出现的任何名称空间前缀。 要获取元素或属性的节点名称，请使用localName（）。 要获取名称空间前缀，请使用namespaceURI（）。
+
+- `QString localName() const`
+
+  如果节点使用名称空间，则此函数返回节点的本地名称；否则返回一个空字符串。
+
+  **只有类型为ElementNode或AttributeNode的节点可以具有名称空间**。 必须在创建时指定名称空间。 之后无法添加名称空间。
+
+  QDomDocument :: createAttributeNS（）
+
+- `QDomNode::NodeType nodeType() const`
+
+  返回节点类型。
+
+- **`QString nodeValue() const`**
+
+  返回节点的值。
+
+  值的含义取决于子类：
+
+  | Name                      | Meaning         |
+  | ------------------------- | --------------- |
+  | QDomAttr                  | 属性值          |
+  | QDomCDATASection          | CDATA部分的内容 |
+  | QDomComment               | The comment     |
+  | QDomProcessingInstruction | 处理命令的数据  |
+  | QDomText                  | The text        |
+
+  
+
 - `QDomNamedNodeMap attributes() const`
 
   返回所有属性的命名节点映射。 仅为QDomElements提供属性。
   更改地图中的属性还将更改此QDomNode的属性。
 
-- `QDomNodeList childNodes() const`
+- **`QDomNodeList childNodes() const`**
 
-  返回所有直接子节点的列表。
+  **返回所有直接子节点的列表**。
   通常，您会在QDomElement对象上调用此函数。
   例如，如果XML文档如下所示：
 
@@ -130,15 +200,23 @@
   如果节点是一个元素，则返回true；否则返回false。 否则返回false。
   如果此函数返回true，则并不表示此对象是QDomElement； 您可以使用toElement（）获得QDomElement。
 
-- `bool isEntity() const`
+- **`bool isEntity() const`**
 
   如果节点是实体，则返回true； 否则返回false。
   如果此函数返回true，则并不表示此对象是QDomEntity。 您可以使用toEntity（）获得QDomEntity。
 
-- `bool isEntityReference() const`
+- **`QDomEntity toEntity() const`**
 
-  如果节点是实体引用，则返回true；否则返回true。
+  将QDomNode转换为QDomEntity。 如果节点不是实体，则返回的对象将为null。
+
+- **`bool isEntityReference() const`**
+
+  如果节点是实体引用，则返回true；否则返回false。
   如果此函数返回true，则并不表示此对象是QDomEntityReference； 您可以使用toEntityReference（）获得QDomEntityReference。
+
+- **`QDomEntityReference toEntityReference() const`**
+
+  将QDomNode转换为QDomEntityReference。 如果该节点不是实体引用，则返回的对象将为null。
 
 - `bool isNotation() const`
 
@@ -171,21 +249,11 @@
 
 - `int lineNumber() const`
 
-- `QString localName() const`
-
-- `QDomNode namedItem(const QString &name) const`
-
 - `QString namespaceURI() const`
 
 - `QDomNode nextSibling() const`
 
 - `QDomElement nextSiblingElement(const QString &tagName = QString()) const`
-
-- `QString nodeName() const`
-
-- `QDomNode::NodeType nodeType() const`
-
-- `QString nodeValue() const`
 
 - `void normalize()`
 
@@ -201,7 +269,15 @@
 
 - `QDomNode removeChild(const QDomNode &oldChild)`
 
-- `QDomNode replaceChild(const QDomNode &newChild, const QDomNode &oldChild)`
+- **`QDomNode replaceChild(const QDomNode &newChild, const QDomNode &oldChild)`**
+
+  用newChild替换oldChild。 **oldChild必须是该节点（即调用者）的直接子代**。
+
+  如果newChild是另一个节点的子节点，则将其重新关联到该节点。 如果newChild是此节点的子级，则将更改其在子级列表中的位置。
+
+  如果newChild是QDomDocumentFragment，则oldChild被该片段的所有子代替换。
+
+  成功返回一个对oldChild的新引用，否则返回一个空节点。
 
 - `void save(QTextStream &stream, int indent, QDomNode::EncodingPolicy encodingPolicy = QDomNode::EncodingFromDocument) const`
 
@@ -224,10 +300,6 @@
 - `QDomDocumentType toDocumentType() const`
 
 - `QDomElement toElement() const`
-
-- `QDomEntity toEntity() const`
-
-- `QDomEntityReference toEntityReference() const`
 
 - `QDomNotation toNotation() const`
 
