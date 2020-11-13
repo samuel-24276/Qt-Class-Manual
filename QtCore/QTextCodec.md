@@ -1,26 +1,57 @@
-# QTextCodec编码类
+# QTextCodec编码转换类
 
 ## 1.Public Types
 
 - class	ConverterState
+
 - enum	ConversionFlag { DefaultConversion, ConvertInvalidToNull, IgnoreHeader }
-- flags	ConversionFlags
+
+  flags	ConversionFlags
+
+  | Constant                         | Value      | Description                                          |
+  | -------------------------------- | ---------- | ---------------------------------------------------- |
+  | QTextCodec::DefaultConversion    | 0          | 没有设置标志。                                       |
+  | QTextCodec::ConvertInvalidToNull | 0x80000000 | 如果设置了此标志，则将每个无效输入字符输出为空字符。 |
+  | QTextCodec::IgnoreHeader         | 0x1        | 忽略任何Unicode字节顺序标记，并且不生成任何标记。    |
+
+  ConversionFlags类型是QFlags <ConversionFlag>的typedef。 它存储ConversionFlag值的OR组合。
 
 ## 2.Public Functions
 
 - virtual QList<QByteArray>	aliases () const
+
+  子类可以为该编解码器返回许多别名。
+
+  编解码器的标准别名可以在IANA字符集编码文件中找到。
+
 - bool	canEncode ( QChar ch ) const
+
+  如果可以使用此编解码器完全编码Unicode字符ch，则返回true；否则返回false。
+
 - bool	canEncode ( const QString & s ) const
+
+  s包含正在测试编码能力的字符串
+
 - QByteArray	fromUnicode ( const QString & str ) const
+
 - QByteArray	fromUnicode ( const QChar * input, int number, ConverterState * state = 0 ) const
+
 - QTextDecoder *	makeDecoder () const
+
 - QTextDecoder *	makeDecoder ( ConversionFlags flags ) const
+
 - QTextEncoder *	makeEncoder () const
+
 - QTextEncoder *	makeEncoder ( ConversionFlags flags ) const
+
 - virtual int	mibEnum () const = 0
+
 - virtual QByteArray	name () const = 0
+
 - QString	toUnicode ( const QByteArray & a ) const
+
 - QString	toUnicode ( const char * input, int size, ConverterState * state = 0 ) const
+
 - QString	toUnicode ( const char * chars ) const
 
 ## 3.Static Public Members
