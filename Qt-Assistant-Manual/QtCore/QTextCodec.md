@@ -1,5 +1,7 @@
 # QTextCodec编码转换类
 
+QTextCodec是一个可以在Unicode和给定编码格式之间进行转换的对象。
+
 ## 1.Public Types
 
 - class	ConverterState

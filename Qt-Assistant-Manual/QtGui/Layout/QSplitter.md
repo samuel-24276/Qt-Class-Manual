@@ -39,6 +39,37 @@
   如果窗口小部件已经在拆分器中，它将被移动到新位置。
   **注意：拆分器拥有窗口小部件的所有权**。
 
+- **`void setSizes(const QList<int> &list)`**
+
+  将子窗口部件的各自大小设置为列表list中给定的值。
+  如果拆分器是水平的，则这些值将以像素为单位从左到右设置每个部件的宽度。 如果拆分器是垂直的，则将设置每个部件的高度，从上到下。
+  列表中的其他值将被忽略。 如果list包含的值太少，则结果是不确定的，但是程序仍然表现良好。
+  拆分器部件的整体大小不受影响。 取而代之的是，根据尺寸的相对权重，在窗口小部件之间分配任何额外/缺失的空间。
+  如果将大小指定为0，则部件将不可见。 部件的大小策略将保留。 即，小于相应窗口部件的最小大小提示的值将由提示的值替换。
+
+- **`QByteArray saveState() const`**
+
+  **保存拆分器布局的状态**。
+  **通常，它与QSettings结合使用以记住将来会话的大小**。 版本号作为数据的一部分存储。 这是一个例子：
+
+  ```c++
+  QSettings settings;
+  settings.setValue("splitterSizes", splitter->saveState());
+  ```
+
+- **`bool restoreState(const QByteArray &state)`**
+
+  **将拆分器的布局恢复到指定的状态**。 如果状态已恢复，则返回true；否则，返回false。 
+
+  **通常，它与QSettings结合使用以从过去的会话中恢复大小**。 这是一个例子：
+
+  ```c++
+  QSettings settings;
+  splitter->restoreState(settings.value("splitterSizes").toByteArray());
+  ```
+
+  所提供的字节数组中的数据无效或过期可能导致无法恢复拆分器的布局。
+
 - `bool childrenCollapsible() const`
 
 - `int count() const`
@@ -88,31 +119,6 @@
   **注意：拆分器拥有窗口小部件的所有权，并将替换后的窗口小部件的父级设置为null**。
   注意：由于窗口小部件重新绑定到拆分器中，因此可能无法立即设置其几何形状，只有在窗口小部件将接收到适当的事件之后，才能对其进行设置。
 
-- **`bool restoreState(const QByteArray &state)`**
-
-  **将拆分器的布局恢复到指定的状态**。 如果状态已恢复，则返回true；否则，返回false。 
-
-  **通常，它与QSettings结合使用以从过去的会话中恢复大小**。 这是一个例子：
-
-  
-
-  ```c++
-  QSettings settings;
-  splitter->restoreState(settings.value("splitterSizes").toByteArray());
-  ```
-
-  所提供的字节数组中的数据无效或过期可能导致无法恢复拆分器的布局。
-
-- **`QByteArray saveState() const`**
-
-  **保存拆分器布局的状态**。
-  **通常，它与QSettings结合使用以记住将来会话的大小**。 版本号作为数据的一部分存储。 这是一个例子：
-
-  ```c++
-  QSettings settings;
-  settings.setValue("splitterSizes", splitter->saveState());
-  ```
-
 - `void setCollapsible(int index, bool collapse)`
 
   **设置index处的子窗口小部件是否可折叠以折叠**。
@@ -126,15 +132,7 @@
 
 - `void setOrientation(Qt::Orientation)`
 
-- `void setSizes(const QList<int> &list)`
-
-  将子窗口部件的各自大小设置为列表list中给定的值。
-  如果拆分器是水平的，则这些值将以像素为单位从左到右设置每个部件的宽度。 如果拆分器是垂直的，则将设置每个部件的高度，从上到下。
-  列表中的其他值将被忽略。 如果list包含的值太少，则结果是不确定的，但是程序仍然表现良好。
-  拆分器部件的整体大小不受影响。 取而代之的是，根据尺寸的相对权重，在窗口小部件之间分配任何额外/缺失的空间。
-  如果将大小指定为0，则部件将不可见。 部件的大小策略将保留。 即，小于相应窗口部件的最小大小提示的值将由提示的值替换。
-
-- `void setStretchFactor(int index, int stretch)`
+- **`void setStretchFactor(int index, int stretch)`**
 
   更新位置index处的窗口小部件的大小策略以使其具有拉伸因子。
   stretch不是有效的拉伸因子； 有效拉伸因子是通过获取小部件的初始大小并将其乘以stretch来计算的。
