@@ -2,6 +2,8 @@
 
 继承关系：`QScrollBar`->`QAbstractSlider `->`QWidget`->`QObject and QPaintDevice`
 
+![qss样式表学习](http://file.elecfans.com/web1/M00/46/76/o4YBAFqeNriAVTMnAABrZDJ8GeI953.png)
+
 ## 1.Public Functions
 
 - QScrollBar ( QWidget * parent = 0 )

@@ -57,11 +57,29 @@
 
 - QMargins contentsMargins() const
 
+- **void setContentsMargins(int left, int top, int right, int bottom)**
+
+  设置要在布局周围使用的左，上，右和下页边距。
+
+  默认情况下，QLayout使用样式提供的值。 在大多数平台上，所有方向上的边距均为11像素。
+
+- void setContentsMargins(const QMargins &margins)
+
+  设置要在布局周围使用的边距。
+
+  默认情况下，QLayout使用样式提供的值。 在大多数平台上，所有方向上的边距均为11像素。
+
+- void getContentsMargins(int *left, int *top, int *right, int *bottom) const
+
+- bool setAlignment(QWidget *w, Qt::Alignment alignment)
+
+  将小部件w的对齐方式设置为alignment，如果在此布局（不包括子布局）中找到w，则返回true；否则，返回true。 否则返回false。
+
+- bool setAlignment(QLayout *l, Qt::Alignment alignment)
+
 - QRect contentsRect() const
 
 - virtual int count() const = 0
-
-- void getContentsMargins(int *left, int *top, int *right, int *bottom) const
 
 - virtual int indexOf(QWidget *widget) const
 
@@ -94,14 +112,6 @@
   注意：小部件的所有权与添加时的所有权相同。
 
 - QLayoutItem *replaceWidget(QWidget *from, QWidget *to, Qt::FindChildOptions options = Qt::FindChildrenRecursively)
-
-- bool setAlignment(QWidget *w, Qt::Alignment alignment)
-
-- bool setAlignment(QLayout *l, Qt::Alignment alignment)
-
-- void setContentsMargins(int left, int top, int right, int bottom)
-
-- void setContentsMargins(const QMargins &margins)
 
 - void setEnabled(bool enable)
 
