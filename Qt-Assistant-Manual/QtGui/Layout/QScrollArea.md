@@ -1,0 +1,3 @@
+# QScrollArea
+
+QScrollArea类提供了一个可以滚动的视口和两个滚动条。如果想给一个窗口添加一个滚动条，则可以使用一个QScrollArea类来实现，这可能比通过初始化QScrollBar，然后再实现它的滚动等功能简单得多。
