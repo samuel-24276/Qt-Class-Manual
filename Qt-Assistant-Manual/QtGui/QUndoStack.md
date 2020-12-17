@@ -5,20 +5,7 @@
 ## 1.Properties
 
 - active : bool
-
-  此属性保存此堆栈的活动状态。
-
-  **一个应用程序通常具有多个撤消堆栈，每个打开的文档一个**。 活动堆栈是与当前活动文档关联的堆栈。 如果堆栈属于QUndoGroup，则调用QUndoGroup :: undo（）或QUndoGroup :: redo（）时，该堆栈将处于活动状态。 如果QUndoView监视了QUndoGroup，则该视图在活动时将显示该堆栈的内容。 如果堆栈不属于QUndoGroup，则使其处于活动状态无效。
-
-  **通常，当关联的文档窗口获得焦点时，程序员需要通过调用setActive（）来指定哪个堆栈处于活动状态**。
-
 - undoLimit : int
-
-  此属性保存此堆栈上的最大命令数。
-
-  当堆栈上的命令数量超过堆栈的undoLimit时，将从堆栈底部删除命令。 宏命令（带有子命令的命令）被视为一个命令。 默认值为0，表示没有限制。
-
-  仅当撤消堆栈为空时才可以设置此属性，因为在非空堆栈上进行设置可能会删除当前索引处的命令。 在非空堆栈上调用setUndoLimit（）会显示警告，但不执行任何操作。
 
 ## 2.Public Functions
 
@@ -70,19 +57,7 @@
 
 - bool	canRedo () const
 
-  如果有可用于重做的命令，则返回true； 否则返回false。
-
-  如果堆栈为空或堆栈中的top命令已经重做，则此函数返回false。
-
-  与index（）== count（）同义。
-
 - bool	canUndo () const
-
-  如果有可用于撤消的命令，则返回true；否则返回false。
-
-  如果堆栈为空，或者堆栈上的底部命令已经撤消，则此函数返回false。
-
-  与index（）== 0的同义词。
 
 - int	cleanIndex () const
 
@@ -94,23 +69,9 @@
 
 - QAction *	createRedoAction ( QObject * parent, const QString & prefix = QString() ) const
 
-  使用给定的父级创建一个重做QAction对象。
-
-  触发此操作将导致对redo（）的调用。 该操作的文本是命令的文本，该命令的文本将在下一次对redo（）的调用中重做，并以指定的前缀为前缀。 如果没有可用于重做的命令，此操作将被禁用。
-
-  如果前缀为空，则使用默认模板“Redo％1”代替前缀。 在Qt 4.8之前，默认使用前缀“ Redo”。
-
 - QAction *	createUndoAction ( QObject * parent, const QString & prefix = QString() ) const
 
-  使用给定的父级创建一个撤消QAction对象。
-
-  触发此操作将导致对undo（）的调用。 该操作的文本是命令的文本，该命令的文本将在下一次调用undo（）时撤消，并以指定的prefix为前缀。 如果没有可用的撤消命令，此操作将被禁用。
-
-  如果前缀为空，则使用默认模板“Undo％1”代替前缀。 在Qt 4.8之前，默认使用前缀“Undo”。
-
 - int	index () const
-
-  返回当前命令的索引。 这是将在下次调用redo（）时执行的命令。 由于许多命令可能已被撤消，因此它并不总是堆栈上最顶层的命令。
 
 - bool	isActive () const
 
@@ -118,25 +79,11 @@
 
 - void	push ( QUndoCommand * cmd )
 
-  将cmd推入堆栈或将其与最近执行的命令合并。 无论哪种情况，都可以通过调用其redo（）函数来执行cmd。
-
-  如果cmd的ID不为-1，并且该ID与最近执行的命令的ID相同，则QUndoStack将通过对最近执行的命令调用QUndoCommand :: mergeWith（）来尝试合并两个命令。 如果QUndoCommand :: mergeWith（）返回true，则删除cmd。
-
-  在所有其他情况下，只需将cmd推入堆栈即可。
-
-  如果在推入cmd之前撤消了命令，则将删除当前命令及其上方的所有命令。 因此，cmd总是最终成为堆栈中的最顶层。
-
-  push命令后，堆栈将获得它的所有权。 没有获取程序可以返回命令，因为在执行完命令后对其进行修改几乎总是会导致文档状态的破坏。
-
 - QString	redoText () const
-
-  返回命令的文本，该文本将在下次调用redo（）时重做。
 
 - void	setUndoLimit ( int limit )
 
 - QString	text ( int idx ) const
-
-  返回索引为idx的命令的文本。
 
 - int	undoLimit () const
 
@@ -144,47 +91,20 @@
 
 ## 3.Public Slots
 
-- void	redo ()
-
-  通过调用QUndoCommand :: redo（）重做当前命令。 **增加当前命令索引**。
-
-  如果堆栈为空，或者已重做堆栈上的top命令，则此功能不执行任何操作。
-
-- void	setActive ( bool active = true )
-
-- void	setClean ()
-
-  将堆栈标记为clean，如果堆栈尚未clean，则发出cleanChanged（）。
-
-  每当堆栈通过使用撤消/重做命令返回到此状态时，它都会发出信号cleanChanged（）。 当堆栈离开clean状态时，也会发出此信号。
-
-- void	setIndex ( int idx )
-
-  重复调用undo（）或redo（），直到当前命令索引达到idx。 此功能可用于使文档的状态向前或向后滚动。 **indexChanged（）仅发出一次**。
-
-- void	undo ()
-
-  通过调用QUndoCommand :: undo（）撤消当前命令下方的命令。 减少当前命令索引。
-
-  如果堆栈为空，或者堆栈上的底部命令已被撤消，则此功能不执行任何操作。
+void	redo ()
+void	setActive ( bool active = true )
+void	setClean ()
+void	setIndex ( int idx )
+void	undo ()
 
 ## 4.Signals
 
-- void	canRedoChanged ( bool canRedo )
-
-- void	canUndoChanged ( bool canUndo )
-
-- void	cleanChanged ( bool clean )
-
-- void	indexChanged ( int idx )
-
-- void	redoTextChanged ( const QString & redoText )
-
-  每当redoText（）的值更改时，都会发出此信号。 它用于更新createRedoAction（）返回的重做操作的text属性。 redoText指定新文本。
-
-- void	undoTextChanged ( const QString & undoText )
-
-  返回命令的文本，该文本将在下次调用undo（）时撤消。
+void	canRedoChanged ( bool canRedo )
+void	canUndoChanged ( bool canUndo )
+void	cleanChanged ( bool clean )
+void	indexChanged ( int idx )
+void	redoTextChanged ( const QString & redoText )
+void	undoTextChanged ( const QString & undoText )
 
 ## 5.Detailed Description
 
